@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Log chart</title>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
+h1 {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: -webkit-linear-gradient(#3498db 0%, #9b59b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  float: left;
+  margin: 5px 5px;
+  padding: 5px 5px;
+}
+div{
+  font-family: 'Noto Sans JP', sans-serif;
+  float: left;
+  margin: 6px 5px;
+}
+form{
+  font-family: 'Noto Sans JP', sans-serif;
+  position: absolute;
+  right: 10px;
+  margin: 0px 5px;
+}
+select{
+  font-family: 'Noto Sans JP', sans-serif;
+  float: left;
+  margin: 5px 5px;
+}
+.y1{
+  border: 1px solid #3cbe14;
+  margin: 6px 2px;
+}
+.y2{
+  border: 1px solid #ffa500;
+  margin: 6px 2px;
+}
+.btn{
+  font-family: 'Noto Sans JP', sans-serif;
+  float: right;
+  margin: auto 5px;
+}
+</style>
+</head>
+<body>
+{% extends "DiaryApp/layout.html" %}
+{% load utils %}
+{% block content %}
+<h1>Log グラフ</h1>
+
+<form method="post" action="{% url 'DiaryApp:chart' %}">
+{% csrf_token %}
+<div>表示する項目を選択:</div>
+<select class='y1' name='y1axis'>
+	<option value='' hidden>項目１(y軸左側)</option>
+	<option value='km'>距離</option>
+	<option value='totalKm'>累計距離</option>
+	<option value='litter'>給油量</option>
+	<option value='totalLitter'>累計給油量</option>
+	<option value='mileage'>燃費</option>
+	<option value='aveMileage'>平均燃費</option>
+	<option value='price'>ガソリン単価</option>
+	<option value='cost'>ガソリン代</option>
+	<option value='totalCost'>累計ガソリン代</option>
+</select>
+
+<select class='y2' name='y2axis'>
+	<option value='' hidden>項目２(y軸右側)</option>
+	<option value='km'>距離</option>
+	<option value='totalKm'>累計距離</option>
+	<option value='litter'>給油量</option>
+	<option value='totalLitter'>累計給油量</option>
+	<option value='mileage'>燃費</option>
+	<option value='aveMileage'>平均燃費</option>
+	<option value='price'>ガソリン単価</option>
+	<option value='cost'>ガソリン代</option>
+	<option value='totalCost'>累計ガソリン代</option>
+</select>
+<p class='btn'><input type="submit" value="表示する"></p>
+</form>
+<canvas id="log_chart" height="100px"></canvas>
+<script>
+var ctx = document.getElementById("log_chart");
+
+var complexChartOption = {
+	      scales: {
+	        yAxes: [{
+	        	id: 'y1',
+	            position: 'left',
+	            scaleLabel: {
+	              display: true,
+	              labelString: '{{y1_label}}',
+	              fontColor: 'rgb(60, 190, 20)'
+	            },
+	            gridLines:{
+	            	color: 'rgba(60, 190, 20, 0.3)'
+	            },
+	            ticks: {
+		            suggestedMax: {{ y1max }},
+		            suggestedMin: 0,
+	            }}, {
+	            id: 'y2',
+	            position: 'right',
+	            scaleLabel: {
+	              display: true,
+	              labelString: '{{y2_label}}',
+	              fontColor: 'rgb(60, 165, 0)'
+	            },
+	            gridLines:{
+	            	color: 'rgba(255, 165, 0, 0.3)'
+	            },
+	            ticks: {
+	              suggestedMax: {{ y2max }},
+	              suggestedMin: 0,
+	            }
+	          }
+	        ]
+	      },
+	  };
+
+var LogLineChart = new Chart(ctx, {
+	  type: "line",
+	  data: {
+	      labels: [
+	    	  {% for x_list in x_list %}
+	    	  '{{ x_list }}',
+	    	  {% endfor %}
+	    	  ],
+	      datasets: [
+	        {
+	          label: '{{y1_label}}',
+	          data: [
+	        	  {% for y1_list in y1_list %}
+	        	  {{ y1_list }},
+	        	  {% endfor %}
+	        	  ],
+	          borderColor: "rgba(60, 190, 20, 0.8)",
+	          backgroundColor: "rgba(60, 190, 20, 0.3)",
+	          yAxisID: 'y1'
+	        },
+	        {
+	          label: '{{y2_label}}',
+	          data: [
+	        	  {% for y2_list in y2_list %}
+	        	  {{ y2_list }},
+	        	  {% endfor %}
+	        	  ],
+	          borderColor: "rgba(255, 165, 0, 0.8)",
+	          backgroundColor: "rgba(255, 265, 0, 0.3)",
+	          yAxisID: 'y2'
+	        }
+	      ],
+	    },
+	  options: complexChartOption
+	      });
+	        
+</script>
+{% endblock %}
+</body>
+</html>

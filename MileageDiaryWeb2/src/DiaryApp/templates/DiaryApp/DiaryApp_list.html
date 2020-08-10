@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Logデータ一覧</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="styleSheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
+table{
+  width: 100%;
+  table:striped; 
+  table:bordered;
+  table:hover;
+  overflow-x: scroll;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+th,td{
+  border:solid 1px #aaaaaa;
+}
+td{
+  text-align: center;
+}
+th {
+  font-weight: bold;
+  vertical-align: top;
+  background: #3f3f3f;
+  color: #ffffff;
+}
+a.btn1{
+  font-family: 'Noto Sans JP', sans-serif;
+  width: 100%
+  display: inline-block;
+  color: #485859;
+  text-decoration: none;
+  border: 2px solid #00bfff;
+  padding: 0px 2px;
+  margin: 1px 1px;
+  font-weight: bold;
+  border-radius: 2px;
+  transition: .4s;
+}
+.btn1:hover {
+  background-color: #00bfff;
+  border-color: #007bbb;
+  color: #FFF;
+}
+a.btn2{
+  font-family: 'Noto Sans JP', sans-serif;
+  width: 100%
+  display: inline-block;
+  color: #485859;
+  text-decoration: none;
+  border: 2px solid #ff4500;
+  padding: 0px 2px;
+  margin: 1px 1px;
+  font-weight: bold;
+  border-radius: 2px;
+  transition: .4s;
+}
+.btn2:hover {
+  background-color: #ff4500;
+  border-color: #e2041b;
+  color: #FFF;
+}
+a.btn3{
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 16px;
+  display: inline-block;
+  color: #9ec34b;
+  text-decoration: none;
+  margin: 10px 5px 10px 20px;
+  border: 2px solid #9ec34b;
+  padding: 8px 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: .4s;
+}
+.btn3:hover {
+  background-color: #9ec34b;
+  border-color: #cbe585;
+  color: #FFF;
+}
+tr:nth-child(even) {
+  background: #d9d9d9;
+ }
+h1 {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: -webkit-linear-gradient(#3498db 0%, #9b59b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  float: left;
+  margin: 5px 5px;
+  padding: 5px 5px;
+}
+
+</style>
+<!-- noConflict関数でjQuery競合を回避　https://www.buildinsider.net/web/jqueryref/067 -->
+<script>
+var $j = jQuery.noConflict(true);
+$j(document).ready(function() {
+	$j("#ListView").tablesorter({
+		headers: {
+            9: { sorter: false },
+            11: { sorter: false }
+         }
+	});
+	}); 
+</script>
+</head>
+<body>
+{% extends "DiaryApp/layout.html" %}
+{% load utils %}
+{% block content %}
+
+<h1>Log一覧</h1> 
+<a class="btn3" href="{% url 'DiaryApp:create'%}" role="button">新規作成</a>
+         <!-- テーブル表の定義 -->
+          <table id=ListView class="tablesorter-default">
+              <thead>
+                <tr>
+                  <th class="text-center">走行距離</th>
+                  <th class="text-center">累計走行距離</th>
+                  <th class="text-center">給油量</th>
+                  <th class="text-center">合計給油量</th>
+                  <th class="text-center">燃費</th>
+                  <th class="text-center">平均燃費</th>
+                  <th class="text-center">ガソリン単価</th>
+                  <th class="text-center">ガソリン代</th>
+                  <th class="text-center">累計ガソリン代</th>
+                  <th class="text-center">メモ</th>
+                  <th class="text-center">日付</th>
+                  <th class="text-center">修正・削除</th>
+                </tr>
+              </thead>
+            　<!-- ここまでが表の列の定義-->
+
+            　<!-- 表のデータ部分の表示-->
+            
+              <tbody>
+              {% with userId=user.id %}
+              {% for log in object_list %}
+                  <tr class="odd gradeX text-center">
+                    <td class="text-center" width="40">{{ log.km}}km</td>
+                    <td class="text-center" width="80">{%  totalKm userId log.id %}km</td>
+                    <td class="text-center" width="50">{{ log.litter }}L</td>
+                    <td class="text-center" width="70">{% totalLitter userId log.id %}L</td>
+                    <td class="text-center" width="40">{{ log.km | mileage:log.litter}}km/L</td>
+                    <td class="text-center" width="40">{% averageMileage userId log.id %}km/L</td>
+                    <td class="text-center" width="80">{{ log.price }}円/L</td>
+                    <td class="text-center" width="70">{{ log.price | cost:log.litter }}円</td>
+                    <td class="text-center" width="90">{% totalCost userId log.id %}円</td>
+                    <td class="text-center" width="160">{{ log.trip_memo }}</td>
+                    <td class="text-center" width="100">{{ log.updated_at }}</td>
+                    <td class="text-center" width="70">
+                <a class="btn1" href="{% url 'DiaryApp:update' log.pk %}" role="button">修正</a>
+                <a class="btn2" href="{% url 'DiaryApp:delete' log.pk %}" role="button">削除</a>
+               </td>
+                  </tr>
+              {% endfor %}
+              {% endwith %}
+              </tbody>
+            　<!-- ここまでが表のデータ部分の表示-->
+
+            </table>
+            <!-- ここまでがテーブル表の定義 -->
+{% include "DiaryApp/pagination.html" %}
+
+{% endblock content %}
+
+
+</body>
+</html>

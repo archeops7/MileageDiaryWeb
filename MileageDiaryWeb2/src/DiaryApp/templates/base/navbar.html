@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
+.navbar-brand {
+  background: -webkit-linear-gradient(#3498db 0%, #9b59b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+div{
+  font-family: 'Noto Sans JP', sans-serif;
+  margin: 0px 5px;
+}
+form{
+  font-family: 'Noto Sans JP', sans-serif;
+  margin: 0px 5px;
+}
+p{
+  font-family: 'Noto Sans JP', sans-serif;
+}
+li{
+margin: auto 0px;
+}
+.navlog{
+margin: auto 0px;
+}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+  <a class="navbar-brand" href="{% url 'DiaryApp:index' %}">MileageDiary</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'DiaryApp:home' %}">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          メニュー
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'DiaryApp:DiaryApp_list' %}">Log 詳細一覧</a>
+          <a class="dropdown-item" href="{% url 'DiaryApp:chart' %}">Log グラフ</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'DiaryApp:create' %}">新規Log追加</a>
+        </div>
+      </li>
+      {% if user.is_authenticated %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          ログアウト
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbardropdown">
+          
+          <a class="dropdown-item" href="{% url 'DiaryApp:logout' %}">ログアウト</a>
+          
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          アカウント管理
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbardropdown">
+          <a class="dropdown-item" href="{% url 'DiaryApp:password_change' %}">パスワード変更</a>
+          
+        </div>
+      </li>
+      {% else %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          ログイン
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbardropdown">
+          <a class="dropdown-item" href="{% url 'DiaryApp:login' %}">ログイン</a>
+          
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'DiaryApp:signup' %}">アカウント登録</a>
+        </div>
+      </li>
+      {% endif %}
+      <li class="nav-item">
+      	<a class="nav-link disabled" href="#">
+        {% if user.is_authenticated %}
+		<p class="navlog">{{ user.get_username }}でログイン中</p>
+		{% else %}
+		<p class="navlog">ログインしていません</p>
+		{% endif %}</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0" action="{% url 'DiaryApp:DiaryApp_list' %}" method="get">
+      <input class="form-control mr-sm-2" name="query" value="{{ request.GET.query }}" type="search" placeholder="メモから検索" aria-label="メモから検索">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+</body>
+</html>

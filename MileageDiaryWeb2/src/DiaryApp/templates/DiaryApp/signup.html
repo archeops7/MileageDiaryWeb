@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DiaryApp SignUp</title>
+<link href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" rel="stylesheet">
+<style>
+.social{
+display: flex;
+}
+.my-skyblue{
+color: #4385f5;
+margin: 2px;
+}
+.my-black{
+color: #1e1e1e;
+margin: 2px;
+}
+.my-green{
+color: #00B900;
+margin: 2px;
+}
+.google{
+ margin-left: 30px;
+ color         : #ffffff;
+ border        : 2px solid #4385f5;
+}
+.github{
+ margin-left: 30px;
+ color         : #ffffff;
+ border        : 2px solid #1e1e1e;
+}
+.githubbtn{
+color: #1e1e1e;
+margin: 5px 5px;
+}
+</style>
+</head>
+<body>
+{% extends "DiaryApp/layout.html" %}
+
+{% block content %}
+  <h2 style="margin:5px 30px">SignUp</h2>
+  <form style="margin:5px 30px" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ユーザー登録</button>
+  </form>
+  <br>
+  <p style="margin:10px 30px"><strong>-- または --</strong></p>
+  <div class="social">
+  <span class="google">
+  <i class="fab fa-google my-skyblue"></i><a style="margin:5px 5px" href="{% url 'DiaryApp:social:begin' 'google-oauth2' %}">SignUp with Google</a><br>
+  </span>
+  <span class="github">
+  <i class="fab fa-github my-black"></i><a class="githubbtn" href="{% url 'DiaryApp:social:begin' 'github' %}">SignUp with GitHub</a><br>
+  </span>
+  </div>
+{% endblock %}
+</body>
+</html>

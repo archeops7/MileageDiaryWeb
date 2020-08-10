@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>detail</title>
+</head>
+<body>
+{{ log }}
+<h1>{{ log.trip_memo }}</h1>
+{% if logKm %}
+    	<ul>
+        	<li>{{ log.km }}</li>
+    	</ul>
+	{% else %}
+    	<p>No DiaryApp are available.</p>
+	{% endif %}
+</body>
+</html>

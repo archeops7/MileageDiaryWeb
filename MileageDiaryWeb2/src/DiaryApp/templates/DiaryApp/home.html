@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MileageDiary トップページ</title>
+<style>
+h2{
+    background: -webkit-linear-gradient(#3498db 0%, #9b59b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin: 5px 5px;
+    padding: 5px 5px;
+    }
+</style>
+</head>
+  <body>
+  {% extends "DiaryApp/layout.html" %}
+  {% block content %}
+  <h2 style="text-align: center;">HOME</h2>
+  <div style="width: 70%;margin: 0px auto;">
+  <h3>最近の更新</h3>
+    <hr />
+    {% for log in log %}
+    <div>
+      <h3>{{ log.trip_memo }}</h3>
+      <div>{{ log.km }}km, {{ log.litter }}L, 更新日: {{ log.updated_at }}</div>
+    </div>
+    <hr />
+    {% endfor %}
+  </div>
+  {% endblock %}
+</body>
+</html>

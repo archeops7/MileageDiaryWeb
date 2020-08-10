@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>MileageDiary index</title>
+    <style>
+    @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
+    *{
+    font-family: 'Noto Sans JP', sans-serif;
+    }
+    h1{
+    background: -webkit-linear-gradient(#3498db 0%, #9b59b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin: 5px 5px;
+    padding: 5px 5px;
+    }
+    p{
+    font-size: large;
+    }
+    .main{
+    text-align: center;
+    margin: 10px 5px;
+    padding: 10px 5px;
+    }
+    .link{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    }
+    .signupbtn, .loginbtn, .logoutbtn{
+    align: center;
+    border-radius : 9%;          /* 角丸       */
+    cursor        : pointer;     /* カーソル   */
+    color         : #ffffff;     /* 文字色     */
+    line-height   : 1em;         /* 1行の高さ  */
+    transition    : .3s;         /* なめらか変化 */
+    box-shadow    : 2px 2px 1px #666666;  /* 影の設定 */
+    }
+    .signupbtn{
+    background    : #5d627b;     /* 背景色     */
+    border        : 2px solid #5d627b;    /* 枠の指定 */
+    }
+    .loginbtn{
+    background    : #556b2f;     /* 背景色     */
+    border        : 2px solid #556b2f;    /* 枠の指定 */
+    }
+    .logoutbtn{
+    background    : #ff4500;     /* 背景色     */
+    border        : 2px solid #ff4500;    /* 枠の指定 */
+    }
+    .signupbtn:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    color         : #5d627b;     /* 背景色     */
+	background    : #ffffff;     /* 文字色     */
+    }
+    .loginbtn:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    color         : #556b2f;     /* 背景色     */
+	background    : #ffffff;     /* 文字色     */
+    }
+    .logoutbtn:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    color         : #ff4500;     /* 背景色     */
+	background    : #ffffff;     /* 文字色     */
+    }
+    .signup{
+    margin: 5px 5px;
+    padding: 5px 5px;
+    width: 25%;
+    background: white;
+    border-top: solid 5px #5d627b;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    }
+    .login{
+    margin: 5px 5px;
+    padding: 5px 5px;
+    width: 25%;
+    background: white;
+    border-top: solid 5px #556b2f;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    }
+    .in{
+    margin: 5px 5px;
+    padding: 5px 5px;
+    width: 25%;
+    background: white;
+    border-top: solid 5px #ff4500;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    }
+    </style>
+  </head>
+  <body>
+  {% extends "DiaryApp/layout.html" %}
+  {% block content %}
+  <h1>MileageDiary</h1>
+  
+  <div class='main'>
+  <p>MileageDiary はクルマの走行距離や給油量、燃費、ガソリン代などを総合的に管理するためのWebアプリです。</p>
+  <p>記録したデータの一覧表示や、グラフ表示もできます。</p>  
+  </div>
+  {% if user.is_authenticated %}
+  		<div class='link'>
+  		<div class='in'>
+        <p>Hello, {{ user.username }}</p>
+        <a class="logoutbtn" href="{% url 'DiaryApp:logout' %}">ログアウト</a>
+        </div>
+        </div>
+    {% else %}
+        <div class='link'>
+		<div class='signup'>
+		<p>ユーザー登録はこちら</p>
+		<a class="signupbtn" href="{% url 'DiaryApp:signup' %}">サインアップ</a>
+		</div>
+		<div class='login'>
+		<p>アカウント作成済の方はこちら</p>
+		<a class="loginbtn" href="{% url 'DiaryApp:login' %}">ログイン</a>
+		</div>
+		</div>
+    {% endif %}
+
+  {% endblock %}
+  </body>
+</html>
