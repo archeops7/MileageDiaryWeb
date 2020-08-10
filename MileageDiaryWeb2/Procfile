@@ -1,0 +1,1 @@
+web: gunicorn MileageDiaryWeb2.wsgi --log-file -
