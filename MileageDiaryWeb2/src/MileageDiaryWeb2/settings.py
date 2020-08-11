@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'DiaryApp.apps.DiaryAppConfig',
     'social_django',
+    'MileageDiaryWeb2',
 ]
 
 MIDDLEWARE = [
