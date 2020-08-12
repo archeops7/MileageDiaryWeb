@@ -16,13 +16,16 @@ from DiaryApp.templatetags import utils
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('DiaryApp:index')
     else:
@@ -34,7 +37,7 @@ def index(request):
 
 @login_required
 def home(request):
-    
+
     log = Log.objects.filter(author_id = request.user.id).order_by('-updated_at')
     return render(request, 'DiaryApp/home.html', {'log': log})
 
@@ -65,14 +68,14 @@ class LogListView(LoginRequiredMixin, ListView):
         return context
     def get_queryset(self):
         q_word = self.request.GET.get('query')
- 
+
         if q_word:
             object_list = Log.objects.filter(
                 Q(trip_memo__icontains=q_word), author_id = self.request.user.id)
         else:
             object_list = Log.objects.filter(author_id = self.request.user.id)
         return object_list
-    
+
 @login_required
 @csrf_exempt
 def ChartView(request, *args, **kwargs):
@@ -84,7 +87,7 @@ def ChartView(request, *args, **kwargs):
         else:
             y1_list = Log.objects.filter(author_id = request.user.id).values_list('km', flat=True)
             y1_label = '距離'
-        
+
         if request.POST.get('y2axis') in {'km', 'totalKm', 'litter', 'totalLitter', 'mileage', 'aveMileage', 'price', 'cost', 'totalCost'}:
             y2_list = utils.chartUtils(passId, request.POST.get('y2axis'))
             y2_label = utils.chartLabel(request.POST.get('y2axis'))
@@ -98,7 +101,7 @@ def ChartView(request, *args, **kwargs):
         y1_label = 'No Data'
         y2_label = 'No Data'
         x_list = [0]
-    
+
     y1max = max(y1_list)
     y1min = min(y1_list)
     y2max = max(y2_list)
@@ -115,10 +118,10 @@ class LogUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'DiaryApp/log_update_form.html'
     model = Log
     fields = ['km', 'litter', 'price', 'trip_memo']
- 
+
     def get_success_url(self):
         return reverse('DiaryApp:DiaryApp_list')
- 
+
     def get_form(self):
         form = super(LogUpdateView, self).get_form()
         form.fields['km'].label = '走行距離'
@@ -126,12 +129,12 @@ class LogUpdateView(LoginRequiredMixin, UpdateView):
         form.fields['price'].label = 'ガソリン単価'
         form.fields['trip_memo'].label = 'メモ'
         return form
-    
+
 class LogCreateView(LoginRequiredMixin, CreateView):
     template_name = 'DiaryApp/log_create_form.html'
     model = Log
     fields = ['km', 'litter', 'price', 'trip_memo']
- 
+
     def form_valid(self, form):
         post = form.save(commit=False)
         # employeeフィールドはログインしているユーザ名とする
@@ -142,9 +145,9 @@ class LogCreateView(LoginRequiredMixin, CreateView):
 class LogDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'DiaryApp/log_delete.html'
     model = Log
- 
+
     success_url = reverse_lazy('DiaryApp:DiaryApp_list')
-    
+
 def userId(request):
     userId = request.user.id
     return userId
@@ -229,5 +232,5 @@ def chartUtils(request, value):
     else:
         yaxis = 'km'
         ylist = Log.objects.values_list(f'{yaxis}', flat=True)
-    
+
     return ylist
