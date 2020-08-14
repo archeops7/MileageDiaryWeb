@@ -2,23 +2,35 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
 <title>MileageDiary トップページ</title>
 <style>
 h2{
-    background: -webkit-linear-gradient(#3498db 0%, #9b59b6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    margin: 5px 5px;
-    padding: 5px 5px;
-    }
+background: -webkit-linear-gradient(#3498db 0%, #9b59b6 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+text-align: center;
+margin: 5px 5px;
+padding: 5px 5px;
+}
+div{
+width: 70%;
+margin: 0px auto;
+}
+@media screen and (min-width: 480px) {
+}
+@media screen and (max-width: 479px) {
+div{
+width: 95%;
+}
+}
 </style>
 </head>
   <body>
   {% extends "DiaryApp/layout.html" %}
   {% block content %}
   <h2 style="text-align: center;">HOME</h2>
-  <div style="width: 70%;margin: 0px auto;">
+  <div>
   <h3>最近の更新</h3>
     <hr />
     {% for log in log %}

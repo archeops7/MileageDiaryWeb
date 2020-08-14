@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" name=”viewport” content=”width=device-width,initial-scale=1.0>
 <title>Log chart</title>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-
 <style>
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
 h1 {
@@ -16,16 +16,22 @@ h1 {
   margin: 5px 5px;
   padding: 5px 5px;
 }
-div{
+.choice, .selector{
   font-family: 'Noto Sans JP', sans-serif;
   float: left;
-  margin: 6px 5px;
+  margin: 6px 3px;
+}
+.contents{
+position: relative;
+width:  calc(100% - 40px);
+height: 450px;
+overflow: hidden;
 }
 form{
   font-family: 'Noto Sans JP', sans-serif;
   position: absolute;
   right: 10px;
-  margin: 0px 5px;
+  margin: 0px 2px;
 }
 select{
   font-family: 'Noto Sans JP', sans-serif;
@@ -43,7 +49,37 @@ select{
 .btn{
   font-family: 'Noto Sans JP', sans-serif;
   float: right;
-  margin: auto 5px;
+  margin: auto 1px;
+}
+@media screen and (min-width: 480px) {
+}
+@media screen and (max-width: 479px) {
+h1{
+float: none;
+}
+select{
+float: none;
+}
+.choice, .selector{
+float: none;
+margin: 3px 3px;
+}
+form{
+position: static;
+margin: 2px auto;
+}
+.btn{
+float:none;
+margin: 2px 2px 2px auto;
+}
+.selector{
+display: flex;
+justify-content: center;
+text-align: center;
+}
+.contents{
+height: 300px;
+}
 }
 </style>
 </head>
@@ -55,7 +91,8 @@ select{
 
 <form method="post" action="{% url 'DiaryApp:chart' %}">
 {% csrf_token %}
-<div>表示する項目を選択:</div>
+<div class='choice'>表示する項目を選択:</div>
+<div class='selector'>
 <select class='y1' name='y1axis'>
 	<option value='' hidden>項目１(y軸左側)</option>
 	<option value='km'>距離</option>
@@ -81,12 +118,31 @@ select{
 	<option value='cost'>ガソリン代</option>
 	<option value='totalCost'>累計ガソリン代</option>
 </select>
+
 <p class='btn'><input type="submit" value="表示する"></p>
+</div>
+
 </form>
-<canvas id="log_chart" height="100px"></canvas>
+
+<div class='contents'>
+<canvas id="log_chart"></canvas>
 <script>
 var ctx = document.getElementById("log_chart");
-
+if (window.matchMedia( '(min-width: 480px)' ).matches) {
+	$(function () {
+    	var container = $('.contents');
+    	var ctx= $('#log_chart');
+    	ctx.attr('width', container.width());
+    	ctx.attr('height', 450);
+});
+}else {
+	$(function () {
+    	var container = $('.contents');
+    	var ctx= $('#log_chart');
+    	ctx.attr('width', container.width());
+    	ctx.attr('height', 300);
+	});
+}
 var complexChartOption = {
 	      scales: {
 	        yAxes: [{
@@ -119,8 +175,16 @@ var complexChartOption = {
 	              suggestedMin: 0,
 	            }
 	          }
-	        ]
+	        ],
+	        xAxes: [{
+	        	ticks: {
+	        		maxRotation: 90,
+	        		minRotation: 90,
+	        	}
+	        }],
 	      },
+	      responsive: true,
+	      maintainAspectRatio: false,
 	  };
 
 var LogLineChart = new Chart(ctx, {
@@ -158,8 +222,9 @@ var LogLineChart = new Chart(ctx, {
 	    },
 	  options: complexChartOption
 	      });
-	        
+
 </script>
+</div>
 {% endblock %}
 </body>
 </html>

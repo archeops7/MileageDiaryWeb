@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"  name=”viewport” content=”width=device-width,initial-scale=1.0>
 <title>Logデータ一覧</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="styleSheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.default.min.css">
@@ -96,7 +96,15 @@ h1 {
   margin: 5px 5px;
   padding: 5px 5px;
 }
-
+@media screen and (min-width: 480px) {
+}
+@media screen and (max-width: 479px) {
+.scroll-table{
+overflow: auto;
+white-space: nowrap;
+width: 100%;
+}
+}
 </style>
 <!-- noConflict関数でjQuery競合を回避　https://www.buildinsider.net/web/jqueryref/067 -->
 <script>
@@ -119,6 +127,7 @@ $j(document).ready(function() {
 <h1>Log一覧</h1> 
 <a class="btn3" href="{% url 'DiaryApp:create'%}" role="button">新規作成</a>
          <!-- テーブル表の定義 -->
+         <div class='scroll-table'>
           <table id=ListView class="tablesorter-default">
               <thead>
                 <tr>
@@ -166,6 +175,7 @@ $j(document).ready(function() {
             　<!-- ここまでが表のデータ部分の表示-->
 
             </table>
+            </div>
             <!-- ここまでがテーブル表の定義 -->
 {% include "DiaryApp/pagination.html" %}
 

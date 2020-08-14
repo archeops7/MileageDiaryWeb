@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"  name=”viewport” content=”width=device-width,initial-scale=1.0>
     <title>MileageDiary index</title>
     <style>
     @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
@@ -89,6 +89,22 @@
     border-top: solid 5px #ff4500;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     }
+    @media screen and (min-width: 480px) {
+    }
+    @media screen and (max-width: 479px) {
+    .signup, .login{
+    width: 80%;
+    }
+    .in{
+    width: 40%;
+    }
+    p{
+    font-size: medium;
+    }
+    .txt{
+    font-size: small;
+    }
+    }
     </style>
   </head>
   <body>
@@ -97,8 +113,8 @@
   <h1>MileageDiary</h1>
   
   <div class='main'>
-  <p>MileageDiary はクルマの走行距離や給油量、燃費、ガソリン代などを総合的に管理するためのWebアプリです。</p>
-  <p>記録したデータの一覧表示や、グラフ表示もできます。</p>  
+  <p class='txt'>MileageDiary はクルマの走行距離や給油量、燃費、ガソリン代などを総合的に管理するためのWebアプリです。</p>
+  <p class='txt'>記録したデータの一覧表示や、グラフ表示もできます。</p>  
   </div>
   {% if user.is_authenticated %}
   		<div class='link'>

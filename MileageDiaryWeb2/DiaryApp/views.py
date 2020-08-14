@@ -17,6 +17,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login, authenticate
+import datetime
 
 def signup(request):
     if request.method == 'POST':
@@ -94,7 +95,9 @@ def ChartView(request, *args, **kwargs):
         else:
             y2_list = Log.objects.values_list('litter', flat=True)
             y2_label = '給油量'
-        x_list = Log.objects.filter(author_id = request.user.id).values_list('updated_at', flat=True)
+        x_list = []
+        for x in Log.objects.filter(author_id = request.user.id).values_list('updated_at', flat=True):
+            x_list.append(x.strftime('%Y/%m/%d'))
     else:
         y1_list = [0]
         y2_list =[0]
